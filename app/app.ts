@@ -1,22 +1,16 @@
-import {getActiveBasedOnDate} from './date-helper'
+import { getActiveBasedOnDate } from "./date-helper"
 import {
   parseMinute,
   parseHour,
   parseDayOfMonth,
   parseMonth,
   parseDayOfWeek,
-  parseYear
-} from './parser'
+  parseYear,
+} from "./parser"
 
 const getCronParts = (string: string) => {
-  const [
-    minutes,
-    hours,
-    dayOfMonth,
-    monthOfYear,
-    dayOfWeek,
-    year
-  ] = string.split(' ')
+  const [minutes, hours, dayOfMonth, monthOfYear, dayOfWeek, year] =
+    string.split(" ")
 
   return {
     minutes,
@@ -24,7 +18,7 @@ const getCronParts = (string: string) => {
     dayOfMonth,
     monthOfYear,
     dayOfWeek,
-    year
+    year,
   }
 }
 
@@ -47,4 +41,25 @@ export const isActive = (cronString: string, matchTime = new Date()) => {
   )
 
   return !isAnyValueEmpty(activeValues)
+}
+
+export const isActiveDay = (cronString: string, matchTime = new Date()) => {
+  const cronParts = getCronParts(cronString.trim())
+  const dayOfWeek = parseDayOfWeek(cronParts.dayOfWeek, matchTime)
+
+  return dayOfWeek.some((weekDay) => matchTime.getDay() === weekDay)
+}
+
+export const isActiveDate = (cronString: string, matchTime = new Date()) => {
+  const cronParts = getCronParts(cronString.trim())
+  const daysInMonth = parseDayOfMonth(cronParts.dayOfMonth, matchTime)
+
+  return daysInMonth.some((day) => matchTime.getDate() === day)
+}
+
+export const isActiveYear = (cronString: string, matchTime = new Date()) => {
+  const cronParts = getCronParts(cronString.trim())
+  const years = parseYear(cronParts.year, matchTime)
+
+  return years.some((year) => matchTime.getFullYear() === year)
 }
