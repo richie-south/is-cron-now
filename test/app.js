@@ -21,6 +21,7 @@ const {
   isActiveDay,
   isActiveDate,
   isActiveYear,
+  isActiveParts,
 } = require("../dist/app")
 
 describe("isActive", () => {
@@ -176,5 +177,35 @@ describe("isActiveYear", () => {
   it("* * * * * 2026 should always be false", () => {
     const result = isActiveYear("* * * * * 2026", new Date("2025-02-10"))
     expect(result).to.be.false
+  })
+})
+
+describe("isActiveParts", () => {
+  it("24 3 17 11 * 1995 should always be true", () => {
+    const result = isActiveParts(
+      "24 3 17 11 * 1995",
+      new Date(1995, 11, 17, 3, 24)
+    )
+
+    expect(result).to.eql({
+      minute: true,
+      hour: true,
+      dayOfMonth: true,
+      monthOfYear: true,
+      dayOfWeek: true,
+      year: true,
+    })
+  })
+
+  it("* * * * * 2017 should always be false", () => {
+    const result = isActiveParts("* * * * * 2017")
+    expect(result).to.eql({
+      minute: true,
+      hour: true,
+      dayOfMonth: true,
+      monthOfYear: true,
+      dayOfWeek: true,
+      year: false,
+    })
   })
 })

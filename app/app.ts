@@ -43,6 +43,31 @@ export const isActive = (cronString: string, matchTime = new Date()) => {
   return !isAnyValueEmpty(activeValues)
 }
 
+export const isActiveParts = (cronString: string, matchTime = new Date()) => {
+  const cronParts = getCronParts(cronString.trim())
+
+  const minutes = parseMinute(cronParts.minutes, matchTime)
+  const hours = parseHour(cronParts.hours, matchTime)
+  const daysInMonth = parseDayOfMonth(cronParts.dayOfMonth, matchTime)
+  const monthOfYear = parseMonth(cronParts.monthOfYear, matchTime)
+  const dayOfWeek = parseDayOfWeek(cronParts.dayOfWeek, matchTime)
+  const year = parseYear(cronParts.year, matchTime)
+
+  const activeValues = getActiveBasedOnDate(
+    [minutes, hours, daysInMonth, monthOfYear, dayOfWeek, year],
+    matchTime
+  )
+
+  return {
+    minute: activeValues[0].length > 0,
+    hour: activeValues[1].length > 0,
+    dayOfMonth: activeValues[2].length > 0,
+    monthOfYear: activeValues[3].length > 0,
+    dayOfWeek: activeValues[4].length > 0,
+    year: activeValues[5].length > 0,
+  }
+}
+
 export const isActiveDay = (cronString: string, matchTime = new Date()) => {
   const cronParts = getCronParts(cronString.trim())
   const dayOfWeek = parseDayOfWeek(cronParts.dayOfWeek, matchTime)
