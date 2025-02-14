@@ -1,6 +1,6 @@
 {
   "name": "is-cron-now",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "check if cron is active",
   "main": "./dist/app.js",
   "scripts": {
